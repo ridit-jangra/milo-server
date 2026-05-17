@@ -1,4 +1,6 @@
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { ChatOptions, Provider, ProviderConfig, StreamOptions } from "../types";
+import { generateText, streamText } from "ai";
 
 export class GoogleProvider extends Provider {
   constructor(config: ProviderConfig) {
@@ -11,7 +13,18 @@ export class GoogleProvider extends Provider {
     messages,
     system,
   }: ChatOptions): Promise<string> {
-    throw new Error("Method not implemented.");
+    const client = createGoogleGenerativeAI({
+      // baseURL: "https://api.groq.com/openai/v1",
+      apiKey: this.config.apiKey,
+    })(model);
+
+    const { text } = await generateText({
+      model: client,
+      system,
+      ...(messages && messages.length > 0 ? { messages } : { prompt }),
+    });
+
+    return text;
   }
 
   async stream({
@@ -20,6 +33,17 @@ export class GoogleProvider extends Provider {
     messages,
     system,
   }: StreamOptions): Promise<ReadableStream> {
-    throw new Error("Method not implemented.");
+    const client = createGoogleGenerativeAI({
+      // baseURL: "https://api.groq.com/openai/v1",
+      apiKey: this.config.apiKey,
+    })(model);
+
+    const { textStream } = streamText({
+      model: client,
+      system,
+      ...(messages && messages.length > 0 ? { messages } : { prompt }),
+    });
+
+    return textStream;
   }
 }

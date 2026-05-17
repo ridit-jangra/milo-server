@@ -1,8 +1,8 @@
-import { generateText, streamText } from "ai";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { ChatOptions, Provider, ProviderConfig, StreamOptions } from "../types";
-import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { generateText, streamText } from "ai";
 
-export class OpenRouterProvider extends Provider {
+export class ZenProvider extends Provider {
   constructor(config: ProviderConfig) {
     super(config);
   }
@@ -13,9 +13,10 @@ export class OpenRouterProvider extends Provider {
     messages,
     system,
   }: ChatOptions): Promise<string> {
-    const client = createOpenRouter({
-      // baseURL: "https://api.groq.com/openai/v1",
-      apiKey: this.config.apiKey,
+    const client = createOpenAICompatible({
+      name: "zen",
+      baseURL: "https://opencode.ai/zen/v1",
+      headers: { Authorization: `Bearer ${this.config.apiKey}` },
     })(model);
 
     const { text } = await generateText({
@@ -33,9 +34,10 @@ export class OpenRouterProvider extends Provider {
     messages,
     system,
   }: StreamOptions): Promise<ReadableStream> {
-    const client = createOpenRouter({
-      // baseURL: "https://api.groq.com/openai/v1",
-      apiKey: this.config.apiKey,
+    const client = createOpenAICompatible({
+      name: "zen",
+      baseURL: "https://opencode.ai/zen/v1",
+      headers: { Authorization: `Bearer ${this.config.apiKey}` },
     })(model);
 
     const { textStream } = streamText({

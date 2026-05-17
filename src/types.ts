@@ -1,3 +1,5 @@
+import { ModelMessage } from "ai";
+
 export type ProviderType =
   | "openai"
   | "anthropic"
@@ -5,7 +7,8 @@ export type ProviderType =
   | "google"
   | "hackclub"
   | "groq"
-  | "whisker";
+  | "whisker"
+  | "opencode-zen";
 
 export type ProviderConfig = {
   provider: ProviderType;
@@ -15,7 +18,7 @@ export type ProviderConfig = {
 
 export type ChatOptions = {
   model: string;
-  messages?: any[];
+  messages?: ModelMessage[];
   prompt: string;
   system?: string;
 };
@@ -28,7 +31,7 @@ export type StreamOptions = {
 };
 
 export abstract class Provider {
-  constructor(private config: ProviderConfig) {}
+  constructor(public config: ProviderConfig) {}
 
   abstract chat({
     model,

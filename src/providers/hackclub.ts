@@ -1,4 +1,6 @@
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { ChatOptions, Provider, ProviderConfig, StreamOptions } from "../types";
+import { generateText, streamText } from "ai";
 
 export class HackClubProvider extends Provider {
   constructor(config: ProviderConfig) {
@@ -11,7 +13,18 @@ export class HackClubProvider extends Provider {
     messages,
     system,
   }: ChatOptions): Promise<string> {
-    throw new Error("Method not implemented.");
+    const client = createOpenRouter({
+      baseURL: "https://ai.hackclub.com/proxy/v1/chat/completions",
+      apiKey: this.config.apiKey,
+    })(model);
+
+    const { text } = await generateText({
+      model: client,
+      system,
+      ...(messages && messages.length > 0 ? { messages } : { prompt }),
+    });
+
+    return text;
   }
 
   async stream({
@@ -20,6 +33,17 @@ export class HackClubProvider extends Provider {
     messages,
     system,
   }: StreamOptions): Promise<ReadableStream> {
-    throw new Error("Method not implemented.");
+    const client = createOpenRouter({
+      baseURL: "https://ai.hackclub.com/proxy/v1/chat/completions",
+      apiKey: this.config.apiKey,
+    })(model);
+
+    const { textStream } = streamText({
+      model: client,
+      system,
+      ...(messages && messages.length > 0 ? { messages } : { prompt }),
+    });
+
+    return textStream;
   }
 }

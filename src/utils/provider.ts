@@ -6,6 +6,7 @@ import { HackClubProvider } from "../providers/hackclub";
 import { WhiskerProvider } from "../providers/whisker";
 import { GroqProvider } from "../providers/groq";
 import { Provider, ProviderConfig } from "../types";
+import { ZenProvider } from "../providers/zen";
 
 export function createProvider(config: ProviderConfig): Provider {
   switch (config.provider) {
@@ -23,6 +24,8 @@ export function createProvider(config: ProviderConfig): Provider {
       return new GroqProvider(config);
     case "whisker":
       return new WhiskerProvider(config);
+    case "opencode-zen":
+      return new ZenProvider(config);
     default:
       throw new Error("Unsupported provider");
   }
