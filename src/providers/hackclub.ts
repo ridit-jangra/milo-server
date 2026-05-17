@@ -44,6 +44,6 @@ export class HackClubProvider extends Provider {
       ...(messages && messages.length > 0 ? { messages } : { prompt }),
     });
 
-    return textStream;
+    return textStream.pipeThrough(new TextEncoderStream());
   }
 }
