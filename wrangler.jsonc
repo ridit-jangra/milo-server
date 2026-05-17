@@ -2,7 +2,15 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "milo-server",
   "main": "src/index.ts",
-  "compatibility_date": "2026-05-17"
+  "compatibility_date": "2026-05-17",
+  "d1_databases": [
+    {
+      "binding": "milo_db",
+      "database_name": "milo-db",
+      "database_id": "7f97622f-afb4-4f73-ab6b-d22deb67262f",
+      "remote": false,
+    },
+  ],
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],

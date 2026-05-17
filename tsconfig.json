@@ -5,7 +5,13 @@
     "moduleResolution": "Bundler",
     "strict": true,
     "skipLibCheck": true,
-    "lib": ["ESNext", "WebWorker"],
+    "lib": [
+      "ESNext",
+      "WebWorker",
+      "@cloudflare/workers-types",
+      "node",
+      "bun-types"
+    ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx"
   }

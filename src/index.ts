@@ -1,39 +1,15 @@
 import { Hono } from "hono";
-import { createProvider } from "./utils/provider";
+import auth from "./routes/auth";
+import me from "./routes/me";
+import chat from "./routes/chat";
+import { Bindings, Variables } from "./types";
 
-const app = new Hono();
+const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
-app.post("/v1/chat/completions", async (c) => {
-  const { model, messages, system, prompt, provider, apiKey, baseUrl } =
-    await c.req.json();
+app.get("/", (c) => c.json({ status: "ok", name: "whisker" }));
 
-  try {
-    const _provider = createProvider({ provider, apiKey, baseURL: baseUrl });
-
-    const response = await _provider.chat({ model, messages, system, prompt });
-
-    return c.json(response);
-  } catch (error) {
-    return c.json({ error: (error as Error).message }, 500);
-  }
-});
-
-app.post("/v1/stream/completions", async (c) => {
-  const { model, messages, system, prompt, provider, apiKey, baseUrl } =
-    await c.req.json();
-  try {
-    const _provider = createProvider({ provider, apiKey, baseURL: baseUrl });
-    const stream = await _provider.stream({ model, messages, system, prompt });
-    return new Response(stream, {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
-    });
-  } catch (error) {
-    return c.json({ error: (error as Error).message }, 500);
-  }
-});
+app.route("/auth", auth);
+app.route("/me", me);
+app.route("/chat", chat);
 
 export default app;
